@@ -33,9 +33,9 @@
 *.app
 
 #Folder for VS
-.vs/*
-bin/*
-bin-int/*
+C++/.vs/*
+C++/bin/*
+C++/bin-int/*
 
 #.user
 *.user
