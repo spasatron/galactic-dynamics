@@ -1,21 +1,68 @@
-#include "QuadTree.h"
+#define _USE_MATH_DEFINES
+#include <random>
+#include <math.h>
+#include <iostream>
+#include "GalacticDynamics.h"
+
+#define NUMBODIES 2
 
 
+//Use the following for a random seed
+
+std::default_random_engine generator;
+
+std::uniform_real_distribution<double> distribution(0.0, 1.0);
+Body createRandomUniformDiskBody(Vec2 center, double radius, double velocity);
 
 
 
 
 
 int main() {
+	generator.seed(77);
 
-	Body a(-1, -1, 1, 0, 1, 1), b(1, 1, 5, 0, -1, 2);
+	
+	Body bodies[NUMBODIES];
 
-	QuadTree* q = new QuadTree(-5, -5, 10);
+	/*for (int i = 0; i < NUMBODIES; i++) {
+		bodies[i] = createRandomUniformDiskBody({ 0.0, 0.0 }, 2, 3);
+	}*/
+	bodies[0] = Body(0, 0, 0, 0, 1);
+	bodies[1] = Body(1, 1, 0, 0, 1);
 
-	q->addBodyToTree(a);
-	q->addBodyToTree(b);
+	//For debugging the positions
+	/*for (int i = 0; i < NUMBODIES; i++) {
+		std::cout << bodies[i].r << " " << bodies[i].v << std::endl;
+	}*/
 
-	std::cout << q->forceOnBody(a) << " " <<  q->forceOnBody(b) << std::endl;
+	BHTree q = BHTree(Quad({ -3, -3 }, 6));
 
+
+	for (int i = 0; i < NUMBODIES; i++) {
+		q.insertBody(bodies[i]);
+	}
+
+	for (int i = 0; i < NUMBODIES; i++) {
+		q.updateForce(bodies[i]);
+	}
+
+	for (int i = 0; i < NUMBODIES; i++) {
+		std::cout << "Body " << i << " feels force " << bodies[i].f << std::endl;
+	}
+
+}
+
+Body createRandomUniformDiskBody(Vec2 center, double radius, double velocity)
+{
+	double angle = 2 * M_PI * distribution(generator);
+	double r = radius * distribution(generator);
+
+	double x = r * cos(angle);
+	double y = r * sin(angle);
+
+	double xV = -velocity * y / r;
+	double yV = velocity * x / r;
+
+	return Body(x, y, xV, yV, 1);
 
 }
