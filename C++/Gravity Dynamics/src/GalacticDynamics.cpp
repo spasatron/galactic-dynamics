@@ -95,8 +95,9 @@ void Body::resetForce()
 
 void Body::addForce(Body b)
 {
-    const double G = 6.67e-11;   // gravational constant
-    const double EPS = 3e6;      // softening parameter
+    //const double G = 6.67e-11; 
+    const double G = 1;// gravational constant
+    const double EPS = 3e-6;      // softening parameter
     double dx = b.r.x - r.x;
     double dy = b.r.x - r.y;
     double dist = sqrt(dx * dx + dy * dy);
@@ -166,7 +167,7 @@ void BHTree::printSomething()
     std::cout << "End" << std::endl;
 }
 
-void BHTree::updateForce(Body b)
+void BHTree::updateForce(Body *b)
 {
 
     updateForceAtNode(b, root);
@@ -185,7 +186,7 @@ void BHTree::destroyTreeFromNode(BHTreeNode *node)
     delete node;
 }
 
-void BHTree::updateForceAtNode(Body b, BHTreeNode *node)
+void BHTree::updateForceAtNode(Body *b, BHTreeNode *node)
 {
     const double theta = .5;
 
@@ -196,14 +197,14 @@ void BHTree::updateForceAtNode(Body b, BHTreeNode *node)
 
     //if the node is external
     if (!node->internal && node->body.m != 0.0) {
-        if (!(b == node->body)) {
-            b.addForce(node->body);
+        if (!(*b == node->body)) {
+            b->addForce(node->body);
         }
     }
 
     //if node is external and far enough away
-    if (node->quad.size / b.distanceTo(node->body) <= theta) {
-        b.addForce(node->body);
+    if (node->quad.size / b->distanceTo(node->body) <= theta) {
+        b->addForce(node->body);
     }
     //If none of the above, run recursively over the children.
     else{

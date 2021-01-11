@@ -4,7 +4,7 @@
 #include <iostream>
 #include "GalacticDynamics.h"
 
-#define NUMBODIES 2
+#define NUMBODIES 10000
 
 
 //Use the following for a random seed
@@ -24,11 +24,9 @@ int main() {
 	
 	Body bodies[NUMBODIES];
 
-	/*for (int i = 0; i < NUMBODIES; i++) {
+	for (int i = 0; i < NUMBODIES; i++) {
 		bodies[i] = createRandomUniformDiskBody({ 0.0, 0.0 }, 2, 3);
-	}*/
-	bodies[0] = Body(0, 0, 0, 0, 1);
-	bodies[1] = Body(1, 1, 0, 0, 1);
+	}
 
 	//For debugging the positions
 	/*for (int i = 0; i < NUMBODIES; i++) {
@@ -43,12 +41,9 @@ int main() {
 	}
 
 	for (int i = 0; i < NUMBODIES; i++) {
-		q.updateForce(bodies[i]);
+		q.updateForce(&(bodies[i]));
 	}
 
-	for (int i = 0; i < NUMBODIES; i++) {
-		std::cout << "Body " << i << " feels force " << bodies[i].f << std::endl;
-	}
 
 }
 

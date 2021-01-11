@@ -73,14 +73,14 @@ public:
 
 	void insertBody(Body b);
 	void printSomething();
-	void updateForce(Body b);
+	void updateForce(Body *b);
 
 
 
 private:
 
 	void destroyTreeFromNode(BHTreeNode* node);
-	void updateForceAtNode(Body b, BHTreeNode *node);
+	void updateForceAtNode(Body *b, BHTreeNode *node);
 	void insertBodyAtNode(Body b, BHTreeNode* node);
 	BHTreeNode* root;
 
