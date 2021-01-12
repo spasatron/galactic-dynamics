@@ -74,7 +74,7 @@ public:
 	void insertBody(Body b);
 	void printSomething();
 	void updateForce(Body *b);
-
+	void resetToQuad(Quad q);
 
 
 private:

@@ -3,8 +3,10 @@
 #include <math.h>
 #include <iostream>
 #include "GalacticDynamics.h"
+#include <fstream>
+#include <sstream>
 
-#define NUMBODIES 10000
+#define NUMBODIES 2
 
 
 //Use the following for a random seed
@@ -24,27 +26,60 @@ int main() {
 	
 	Body bodies[NUMBODIES];
 
-	for (int i = 0; i < NUMBODIES; i++) {
-		bodies[i] = createRandomUniformDiskBody({ 0.0, 0.0 }, 2, 3);
-	}
+	/*for (int i = 0; i < NUMBODIES; i++) {
+		bodies[i] = createRandomUniformDiskBody({ 0.0, 0.0 }, 2, .01);
+	}*/
+
+	bodies[0].r = { 0.0, 0.0 };
+	bodies[1].r = { 1.0, 0.0 };
+	bodies[0].v = { 0.0, 0.0 };
+	bodies[1].v = { 0.0, 7.5 };
+	bodies[0].m = 100.0;
+	bodies[1].m = 1.0/100000.0;
+
 
 	//For debugging the positions
 	/*for (int i = 0; i < NUMBODIES; i++) {
 		std::cout << bodies[i].r << " " << bodies[i].v << std::endl;
 	}*/
 
-	BHTree q = BHTree(Quad({ -3, -3 }, 6));
+	BHTree q;
+	std::ofstream fileStream;
+	std::stringstream fileName;
 
+	for (int t = 0; t < 1000; t++) {
+		fileName.str(std::string());
+		fileName.clear();
+		fileName << "data" << t << ".plot";
 
-	for (int i = 0; i < NUMBODIES; i++) {
-		q.insertBody(bodies[i]);
+		fileStream.open(fileName.str());
+		if (!fileStream.fail()) {
+			for (int i = 0; i < NUMBODIES; i++) {
+				fileStream << bodies[i].r << std::endl;
+			}
+			fileStream.close();
+		}
+
+		q.resetToQuad(Quad({ -10.0, -10.0 }, 20));
+		
+
+		for (int i = 0; i < NUMBODIES; i++) {
+			q.insertBody(bodies[i]);
+			bodies[i].resetForce();
+		}
+
+		
+
+		for (int i = 0; i < NUMBODIES; i++) {
+			q.updateForce(&(bodies[i]));
+		}
+		for (int i = 0; i < NUMBODIES; i++) {
+			bodies[i].update(.001);
+		}
+
+		
+		
 	}
-
-	for (int i = 0; i < NUMBODIES; i++) {
-		q.updateForce(&(bodies[i]));
-	}
-
-
 }
 
 Body createRandomUniformDiskBody(Vec2 center, double radius, double velocity)
@@ -58,6 +93,8 @@ Body createRandomUniformDiskBody(Vec2 center, double radius, double velocity)
 	double xV = -velocity * y / r;
 	double yV = velocity * x / r;
 
+	//double xV = 0;
+	//double yV = 0;
 	return Body(x, y, xV, yV, 1);
 
 }

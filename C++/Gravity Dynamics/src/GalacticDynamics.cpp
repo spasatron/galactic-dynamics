@@ -96,8 +96,9 @@ void Body::resetForce()
 void Body::addForce(Body b)
 {
     //const double G = 6.67e-11; 
-    const double G = 1;// gravational constant
-    const double EPS = 3e-6;      // softening parameter
+    const double G = 1;
+    //const double G = 10;// gravational constant
+    const double EPS = 1e-3;      // softening parameter
     double dx = b.r.x - r.x;
     double dy = b.r.x - r.y;
     double dist = sqrt(dx * dx + dy * dy);
@@ -150,6 +151,7 @@ BHTree::BHTree(Quad quad)
 {
     root = new BHTreeNode();
     root->quad = quad;
+    root->body = Body();
 }
                        
 BHTree::~BHTree()      
@@ -171,6 +173,13 @@ void BHTree::updateForce(Body *b)
 {
 
     updateForceAtNode(b, root);
+}
+
+void BHTree::resetToQuad(Quad q)
+{
+    destroyTreeFromNode(root);
+    root = new BHTreeNode();
+    root->quad = q;
 }
                        
 void BHTree::destroyTreeFromNode(BHTreeNode *node)
