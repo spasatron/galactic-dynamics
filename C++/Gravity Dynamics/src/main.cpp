@@ -6,7 +6,7 @@
 #include <fstream>
 #include <sstream>
 
-#define NUMBODIES 2
+#define NUMBODIES 10000
 
 
 //Use the following for a random seed
@@ -26,17 +26,15 @@ int main() {
 	
 	Body bodies[NUMBODIES];
 
-	/*for (int i = 0; i < NUMBODIES; i++) {
-		bodies[i] = createRandomUniformDiskBody({ 0.0, 0.0 }, 2, .01);
-	}*/
+	for (int i = 0; i < NUMBODIES; i++) {
+		bodies[i] = createRandomUniformDiskBody({ 0.0, 0.0 }, 2, .5);
+	}
 
-	bodies[0].r = { 0.0, 0.0 };
-	bodies[1].r = { 1.0, 0.0 };
-	bodies[0].v = { 0.0, 0.0 };
-	bodies[1].v = { 0.0, 7.5 };
-	bodies[0].m = 100.0;
-	bodies[1].m = 1.0/100000.0;
-
+	/*bodies[0].r = { -1, 1 };
+	bodies[1].r = { -.5, .5 };
+	bodies[0].m = 1;
+	bodies[1].m = 1;
+	*/
 
 	//For debugging the positions
 	/*for (int i = 0; i < NUMBODIES; i++) {
@@ -47,7 +45,7 @@ int main() {
 	std::ofstream fileStream;
 	std::stringstream fileName;
 
-	for (int t = 0; t < 1000; t++) {
+	for (int t = 0; t < 5000; t++) {
 		fileName.str(std::string());
 		fileName.clear();
 		fileName << "data" << t << ".plot";
@@ -74,7 +72,7 @@ int main() {
 			q.updateForce(&(bodies[i]));
 		}
 		for (int i = 0; i < NUMBODIES; i++) {
-			bodies[i].update(.001);
+			bodies[i].update(.01);
 		}
 
 		

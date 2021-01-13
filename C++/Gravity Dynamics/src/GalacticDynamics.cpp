@@ -96,11 +96,11 @@ void Body::resetForce()
 void Body::addForce(Body b)
 {
     //const double G = 6.67e-11; 
-    const double G = 1;
+    const double G = 1e-4;
     //const double G = 10;// gravational constant
-    const double EPS = 1e-3;      // softening parameter
+    const double EPS = 1e-2;      // softening parameter
     double dx = b.r.x - r.x;
-    double dy = b.r.x - r.y;
+    double dy = b.r.y - r.y;
     double dist = sqrt(dx * dx + dy * dy);
     double F = (G * m * b.m) / (dist * dist + EPS * EPS);
     f.x += F * dx / dist;
